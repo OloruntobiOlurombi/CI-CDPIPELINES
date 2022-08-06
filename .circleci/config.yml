@@ -52,7 +52,7 @@ jobs:
             npm run test
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build      
+          key: frontend-test      
                 
   test-backend:
     docker:
@@ -68,7 +68,7 @@ jobs:
             npm run test         
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build
+          key: backend-test
 
 workflows:
   default:
