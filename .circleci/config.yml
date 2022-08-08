@@ -237,7 +237,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar gzip aws-cli
+            yum install tar gzip aws-cli
       - run:
           name: Configure server
           command: |
