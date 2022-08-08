@@ -44,7 +44,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure "https://kvdb.io/VsW1L2hFeHSTTTtUEpYk62/migration_<<parameters.workflow_id>>")
+            SUCCESS=$(curl --insecure "https://kvdb.io/4EVKmUVPCSbndmjwqVZLtZ/migration_<<parameters.workflow_id>>")
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -256,6 +256,14 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
+
+      - run:
+          name: Install AWS CLI dependencies
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install 
       - run:
           name: Run migrations
           command: |
@@ -267,7 +275,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then 
-              curl --insecure https://kvdb.io/VsW1L2hFeHSTTTtUEpYk62/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+              curl --insecure https://kvdb.io/4EVKmUVPCSbndmjwqVZLtZ/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             f1
       - destroy-environment
       - revert-migrations              
