@@ -19,7 +19,7 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
 
   revert-migrations:
-    description: Revert the last migration if successfully run in the current workflow.
+    description: Revert the last migration if successfully run in the current workflow..
     parameters:
       # Add parameter here
       workflow_id:
@@ -228,7 +228,13 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
-
+      - run:
+          name: Install AWS CLI dependencies
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - run:
           name: Run migrations
           command: |
@@ -241,7 +247,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then 
-              curl --insecure https://kvdb.io/XumBjSRf23ieTmd5Jqehxb/migration_${CIRCLE_WORKFLOW_ID:0:7} # -d '1'
+              curl --insecure https://kvdb.io/XumBjSRf23ieTmd5Jqehxb/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             f1
       - destroy-environment
       # - revert-migrations              
