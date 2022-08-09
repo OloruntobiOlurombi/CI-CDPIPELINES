@@ -11,10 +11,17 @@ commands:
 
     steps:
       - run:
+          name: Install AWS CLI dependencies
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            
+      - run:
           name: Destroy environments
           when: on_fail
           command: |
-            yum install aws-cli
             aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
             aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
