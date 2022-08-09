@@ -11,14 +11,6 @@ commands:
 
     steps:
       - run:
-          name: Install AWS CLI dependencies
-          shell: |
-            apt-get update && sudo apt-get install -yy less
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            ./aws/install
-
-      - run:
           name: Destroy environments
           when: on_fail
           command: |
@@ -99,9 +91,7 @@ jobs:
             cd frontend 
             npm install
             npm run test
-      # - save_cache:
-      #     paths: [frontend/node_modules]
-      #     key: frontend-test      
+        
                 
   test-backend:
     docker:
@@ -116,9 +106,7 @@ jobs:
             cd backend
             npm install
             npm run test         
-      # - save_cache:
-      #     paths: [backend/node_modules]
-      #     key: backend-test
+    
 
   scan-frontend:
     docker:
@@ -150,8 +138,7 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit fix --force
-      
-  
+       
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -228,11 +215,18 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
           keys: [backend-build]
+      - run:
+          name: Install AWS CLI dependencies
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install    
       - run:
           name: Run migrations
           command: |
@@ -249,8 +243,6 @@ jobs:
             f1
       - destroy-environment
               
-
-
 workflows:
   default:
     jobs:
