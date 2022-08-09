@@ -1,0 +1,38 @@
+---
+- name: "update local apt repo."
+  become: true
+  apt:
+    update_cache: yes
+
+- name: "upgrade apt packages"
+  become: true
+  apt:
+    upgrade: yes
+
+- name: "remove stale dependencies"
+  become: true
+  apt:
+    autoremove: yes
+
+- name: "install dependencies [nodejs and npm]."
+  become: true
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update_cache: yes
+
+- name: "install pm2"
+  become: true
+  command: 'npm install -g pm2'
+
+- name: "Extract artifact into EC2 Instance" 
+  become: true
+  unarchive:
+    src: files/artifact.tar.gz
+    dest: .
+
+- name: "Start the app"
+  become: true
+  shell: |
+    pm2 stop all
+    pm2 start npm -- start
