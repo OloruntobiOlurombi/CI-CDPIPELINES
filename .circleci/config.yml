@@ -290,6 +290,41 @@ jobs:
       - revert-migrations:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
+  deploy-backend:
+    docker:
+      - image: python:3.10-alpine3.16
+    steps:
+      - checkout
+      # Add ssh keys with fingerprint
+      - add_ssh_keys: 
+          fingerprints: ['74:b7:47:5d:34:be:93:b4:bf:fc:0b:29:44:64:a9:66']
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update --no-cache tar gzip openssh curl ansible nodejs npm aws-cli
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            npm install 
+            # npm install typescript@latest -g 
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
+            mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
+            mv artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz
+            cd .circleci/ansible
+            echo "Contents of the inventory.txt file is -----"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}          
+
 workflows:
   default:
     jobs:
@@ -313,4 +348,6 @@ workflows:
       - run-migrations:
           requires: [configure-infrastructure]  
       - deploy-frontend:
-          requires: [run-migrations]          
+          requires: [run-migrations]      
+      - deploy-backend:
+          requires: [run-migrations]    
