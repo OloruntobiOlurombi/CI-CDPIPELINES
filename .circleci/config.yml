@@ -13,11 +13,11 @@ commands:
       - run:
           name: Install AWS CLI dependencies
           command: |
-            sudo apt-get update && sudo apt-get install -yy less
+            apt-get update && sudo apt-get install -yy less
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
-            sudo ./aws/install
-            
+            ./aws/install
+
       - run:
           name: Destroy environments
           when: on_fail
@@ -248,7 +248,7 @@ jobs:
               curl --insecure https://kvdb.io/XumBjSRf23ieTmd5Jqehxb/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             f1
       - destroy-environment
-      # - revert-migrations              
+              
 
 
 workflows:
