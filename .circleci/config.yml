@@ -350,7 +350,7 @@ jobs:
                 return 1
             fi
       - run:
-          name: Frontend smoke test1.
+          name: Frontend smoke test12.
           command: |
             export URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
             echo ${URL} 
