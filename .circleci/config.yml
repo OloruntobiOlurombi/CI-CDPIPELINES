@@ -335,7 +335,7 @@ jobs:
           command: |
             apk add --update --no-cache aws-cli curl tar gzip nodejs npm
       - run:
-          name: Backend smoke test2
+          name: Backend smoke test 3
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
