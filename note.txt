@@ -2,6 +2,6 @@
 https://github.com/OloruntobiOlurombi/CI-CDPIPELINES
 
 [URL02]
-http://udapeople-510372b.s3-website-us-east-1.amazonaws.com
+http://udapeople-629f6e0.s3-website-us-east-1.amazonaws.com
 
 
