@@ -465,9 +465,7 @@ workflows:
             branches:
               only: [master]  
       - configure-infrastructure:
-          requires: [deploy-infrastructure]
-      - add-prometheus-node-exporter:
-          requires: [deploy-infrastructure]    
+          requires: [deploy-infrastructure]  
       - run-migrations:
           requires: [configure-infrastructure]  
       - deploy-frontend:
